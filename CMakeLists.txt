@@ -25,11 +25,13 @@ target_include_directories(hello PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 add_executable(hello_world src/main.c)
 target_link_libraries(hello_world PRIVATE hello)
+target_include_directories(hello_world PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 option(BUILD_TESTS "Build unit tests" ON)
 if(BUILD_TESTS)
   enable_testing()
   add_executable(hello_test tests/test_hello.c)
   target_link_libraries(hello_test PRIVATE hello)
+  target_include_directories(hello_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
   add_test(NAME hello_test COMMAND hello_test)
 endif()
