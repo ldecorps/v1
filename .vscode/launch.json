@@ -1,4 +1,14 @@
 {
   "version": "0.2.0",
-  "configurations": []
+  "configurations": [
+    {
+      "name": "Launch hello_world",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/hello_world",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build hello_world"
+    }
+  ]
 }

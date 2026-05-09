@@ -13,6 +13,10 @@ project(hello_c_project VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 # Export compilation database for editor integrations
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
