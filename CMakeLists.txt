@@ -45,7 +45,11 @@ if(BUILD_TESTS)
   endif()
 
   if(cmocka_FOUND)
-    set(CMOCKA_LINK_TARGET cmocka::cmocka)
+    if(TARGET cmocka::cmocka)
+      set(CMOCKA_LINK_TARGET cmocka::cmocka)
+    else()
+      set(CMOCKA_LINK_TARGET ${CMOCKA_LIBRARIES})
+    endif()
   elseif(CMOCKA_FOUND)
     set(CMOCKA_LINK_TARGET ${CMOCKA_LIBRARIES})
   else()
@@ -58,6 +62,7 @@ if(BUILD_TESTS)
   add_executable(${TEST_EXE} tests/test_hello_cmocka.c)
   target_include_directories(${TEST_EXE} PRIVATE
     ${PROJECT_SOURCE_DIR}/include
+    ${CMOCKA_INCLUDE_DIR}
     ${CMOCKA_INCLUDE_DIRS}
   )
   target_link_libraries(${TEST_EXE} PRIVATE hello ${CMOCKA_LINK_TARGET})
