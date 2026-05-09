@@ -28,10 +28,50 @@ target_link_libraries(hello_world PRIVATE hello)
 target_include_directories(hello_world PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 option(BUILD_TESTS "Build unit tests" ON)
+
 if(BUILD_TESTS)
   enable_testing()
-  add_executable(hello_test tests/test_hello.c)
-  target_link_libraries(hello_test PRIVATE hello)
-  target_include_directories(hello_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
-  add_test(NAME hello_test COMMAND hello_test)
+
+  # cmocka — install via:
+  #   MSYS2:  pacman -S mingw-w64-x86_64-cmocka
+  #   macOS:  brew install cmocka
+  #   Linux:  sudo apt install libcmocka-dev
+  find_package(cmocka QUIET)
+  if(NOT cmocka_FOUND)
+    find_package(PkgConfig QUIET)
+    if(PKG_CONFIG_FOUND)
+      pkg_check_modules(CMOCKA QUIET cmocka)
+    endif()
+  endif()
+
+  if(cmocka_FOUND)
+    set(CMOCKA_LINK_TARGET cmocka::cmocka)
+  elseif(CMOCKA_FOUND)
+    set(CMOCKA_LINK_TARGET ${CMOCKA_LIBRARIES})
+  else()
+    # Fallback: try linking by name (works if MinGW/brew puts it on the path)
+    message(STATUS "cmocka not found via find_package — linking by name")
+    set(CMOCKA_LINK_TARGET cmocka)
+  endif()
+
+  set(TEST_EXE hello_test)
+  add_executable(${TEST_EXE} tests/test_hello_cmocka.c)
+  target_include_directories(${TEST_EXE} PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${CMOCKA_INCLUDE_DIRS}
+  )
+  target_link_libraries(${TEST_EXE} PRIVATE hello ${CMOCKA_LINK_TARGET})
+
+  add_test(NAME ${TEST_EXE} COMMAND ${TEST_EXE})
 endif()
+
+# Installation rules
+install(TARGETS hello hello_world
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+
+install(FILES ${PROJECT_SOURCE_DIR}/include/hello.h
+  DESTINATION include
+)
