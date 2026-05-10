@@ -27,6 +27,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_library(hello STATIC src/hello.c)
 target_include_directories(hello PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
+# Examen 2026 LU1IN002 — module especes (tableaux + listes chainees)
+# REF: Examen_2026_UL1IN002_Prediction.pdf
+add_library(especes STATIC src/especes.c)
+target_include_directories(especes PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
 add_executable(hello_world src/main.c)
 target_link_libraries(hello_world PRIVATE hello)
 target_include_directories(hello_world PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -49,6 +54,20 @@ if(BUILD_TESTS)
     target_link_libraries(${COURS_TEST_EXE} PRIVATE m)
   endif()
   add_test(NAME ${COURS_TEST_EXE} COMMAND ${COURS_TEST_EXE})
+
+  # Examen 2026 LU1IN002 — tests unitaires des fonctions especes
+  # REF: Examen_2026_UL1IN002_Prediction.pdf
+  set(ESPECES_TEST_EXE especes_test)
+  add_executable(${ESPECES_TEST_EXE} tests/test_especes_tau.c)
+  target_include_directories(${ESPECES_TEST_EXE} PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/third_party
+  )
+  target_link_libraries(${ESPECES_TEST_EXE} PRIVATE especes)
+  if(UNIX)
+    target_link_libraries(${ESPECES_TEST_EXE} PRIVATE m)
+  endif()
+  add_test(NAME ${ESPECES_TEST_EXE} COMMAND ${ESPECES_TEST_EXE})
 endif()
 
 # Installation rules
