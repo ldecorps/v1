@@ -2,13 +2,56 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch hello_world",
+      "name": "Debug hello_world (Windows/gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/hello_world.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+      "setupCommands": [
+        { "description": "Enable pretty-printing", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ],
+      "preLaunchTask": "CMake: Build"
+    },
+    {
+      "name": "Debug hello_test (Windows/gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/hello_test.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+      "setupCommands": [
+        { "description": "Enable pretty-printing", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ],
+      "preLaunchTask": "CMake: Build"
+    },
+    {
+      "name": "Debug hello_world (macOS/lldb)",
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/bin/hello_world",
       "args": [],
       "cwd": "${workspaceFolder}",
-      "preLaunchTask": "build hello_world"
+      "preLaunchTask": "CMake: Build"
+    },
+    {
+      "name": "Debug hello_test (macOS/lldb)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/hello_test",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "CMake: Build"
     }
   ]
 }

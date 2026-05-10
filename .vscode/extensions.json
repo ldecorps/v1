@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools",
+    "hbenl.vscode-test-explorer",
+    "matepek.vscode-catch2-test-adapter",
+    "vadimcn.vscode-lldb"
+  ]
+}
