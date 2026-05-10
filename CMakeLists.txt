@@ -72,6 +72,16 @@ if(BUILD_TESTS)
   target_link_libraries(${TEST_EXE} PRIVATE hello ${CMOCKA_LINK_TARGET})
 
   add_test(NAME ${TEST_EXE} COMMAND ${TEST_EXE})
+
+  # Cours UL1IN002 — tests pédagogiques autonomes (tout inline, pas de lib externe)
+  set(COURS_TEST_EXE cours_test)
+  add_executable(${COURS_TEST_EXE} tests/test_cours_UL1IN002.c)
+  target_include_directories(${COURS_TEST_EXE} PRIVATE
+    ${CMOCKA_INCLUDE_DIR}
+    ${CMOCKA_INCLUDE_DIRS}
+  )
+  target_link_libraries(${COURS_TEST_EXE} PRIVATE ${CMOCKA_LINK_TARGET})
+  add_test(NAME ${COURS_TEST_EXE} COMMAND ${COURS_TEST_EXE})
 endif()
 
 # Installation rules
