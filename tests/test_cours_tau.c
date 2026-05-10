@@ -28,10 +28,10 @@ TEST(pointeurs, adresse_et_deref) {
     int x = 42;
     int *p = &x;              /* p = adresse de x */
 
-    REQUIRE_EQ(*p, 42);      /* *p lit la valeur a l'adresse p */
+    REQUIRE_EQ(*p, 42, "Le pointeur doit dereferencer la valeur initiale de x");      /* *p lit la valeur a l'adresse p */
 
     *p = 99;                  /* *p modifie la valeur a l'adresse p */
-    REQUIRE_EQ(x, 99);       /* x a ete change via le pointeur */
+    REQUIRE_EQ(x, 99, "Ecrire via *p doit modifier la variable x");       /* x a ete change via le pointeur */
 }
 
 /* ===================================================================
@@ -51,7 +51,7 @@ static void doubler(int *val) {
 TEST(pointeurs, parametre_sortie) {
     int n = 5;
     doubler(&n);         /* on passe l'adresse, la fonction modifie n */
-    REQUIRE_EQ(n, 10);
+    REQUIRE_EQ(n, 10, "Le parametre de sortie doit doubler la valeur");
 }
 
 /* ===================================================================
@@ -70,8 +70,8 @@ TEST(structures, acces_point) {
     e.code  = 3;
     e.nbObs = 7;
 
-    REQUIRE_EQ(e.code,  3);
-    REQUIRE_EQ(e.nbObs, 7);
+    REQUIRE_EQ(e.code,  3, "L'acces par point doit lire correctement le champ code");
+    REQUIRE_EQ(e.nbObs, 7, "L'acces par point doit lire correctement le champ nbObs");
 }
 
 /* ===================================================================
@@ -84,11 +84,11 @@ TEST(structures, acces_fleche) {
     Espece  e = {5, 2};
     Espece *p = &e;
 
-    REQUIRE_EQ(p->code,  5);    /* p->code  ==  (*p).code */
-    REQUIRE_EQ(p->nbObs, 2);
+    REQUIRE_EQ(p->code,  5, "L'operateur -> doit acceder au champ code via pointeur");    /* p->code  ==  (*p).code */
+    REQUIRE_EQ(p->nbObs, 2, "L'operateur -> doit acceder au champ nbObs via pointeur");
 
     p->nbObs = 10;              /* modifier via le pointeur */
-    REQUIRE_EQ(e.nbObs, 10);   /* la structure originale est modifiee */
+    REQUIRE_EQ(e.nbObs, 10, "Modifier via un pointeur doit impacter la structure cible");   /* la structure originale est modifiee */
 }
 
 /* ===================================================================
@@ -104,11 +104,11 @@ TEST(structures, acces_fleche) {
  * =================================================================== */
 TEST(memoire, malloc_free) {
     Espece *p = malloc(sizeof(Espece));
-    REQUIRE_NOT_NULL(p);    /* toujours verifier ! */
+    REQUIRE_NOT_NULL(p, "malloc doit retourner un pointeur valide");    /* toujours verifier ! */
 
     p->code  = 7;
     p->nbObs = 3;
-    REQUIRE_EQ(p->code, 7);
+    REQUIRE_EQ(p->code, 7, "La zone allouee doit etre accessible en lecture/ecriture");
 
     free(p);
     /* Bonne pratique : p = NULL; apres free */
@@ -136,9 +136,9 @@ TEST(listes, typedef_maillon) {
     Maillon m1 = {10, NULL};
     Maillon m2 = {20, &m1};
 
-    REQUIRE_EQ(m2.val,       20);
-    REQUIRE_EQ(m2.suiv->val, 10);   /* acces au suivant via -> */
-    REQUIRE_NULL(m2.suiv->suiv);    /* fin de liste = NULL */
+    REQUIRE_EQ(m2.val,       20, "Le maillon de tete doit conserver sa valeur");
+    REQUIRE_EQ(m2.suiv->val, 10, "Le lien suiv doit pointer vers le maillon precedent");   /* acces au suivant via -> */
+    REQUIRE_NULL(m2.suiv->suiv, "Le dernier maillon doit avoir suiv == NULL");    /* fin de liste = NULL */
 }
 
 /* ===================================================================
@@ -161,7 +161,7 @@ TEST(listes, parcours) {
         p = p->suiv;
     }
 
-    REQUIRE_EQ(somme, 6);    /* 1 + 2 + 3 */
+    REQUIRE_EQ(somme, 6, "Le parcours de liste doit sommer 1 + 2 + 3");    /* 1 + 2 + 3 */
 }
 
 /* ===================================================================
@@ -199,10 +199,10 @@ TEST(listes, insertion_tete) {
     liste = inserer_tete(liste, 2);    /* 2 -> 3 -> NULL     */
     liste = inserer_tete(liste, 1);    /* 1 -> 2 -> 3 -> NULL */
 
-    REQUIRE_EQ(liste->val,             1);
-    REQUIRE_EQ(liste->suiv->val,       2);
-    REQUIRE_EQ(liste->suiv->suiv->val, 3);
-    REQUIRE_NULL(liste->suiv->suiv->suiv);
+    REQUIRE_EQ(liste->val,             1, "Apres insertion en tete, la nouvelle tete doit valoir 1");
+    REQUIRE_EQ(liste->suiv->val,       2, "Le deuxieme maillon doit valoir 2");
+    REQUIRE_EQ(liste->suiv->suiv->val, 3, "Le troisieme maillon doit valoir 3");
+    REQUIRE_NULL(liste->suiv->suiv->suiv, "Le dernier maillon doit terminer la liste avec NULL");
 
     liberer_liste(liste);
 }
@@ -230,7 +230,7 @@ TEST(memoire, liberation_liste) {
         p = tmp;                   /* 3. AVANCER */
     }
 
-    REQUIRE_EQ(1, 1);   /* arriver ici sans crash valide la liberation */
+    REQUIRE_EQ(1, 1, "La liberation complete ne doit provoquer aucun crash");   /* arriver ici sans crash valide la liberation */
 }
 
 /* ===================================================================
@@ -246,9 +246,9 @@ TEST(tableaux, statique) {
     int tab[5] = {10, 20, 30, 40, 50};
     int n = (int)(sizeof(tab) / sizeof(tab[0]));
 
-    REQUIRE_EQ(n,      5);
-    REQUIRE_EQ(tab[0], 10);    /* premier element : indice 0 */
-    REQUIRE_EQ(tab[4], 50);    /* dernier element : indice N-1 */
+    REQUIRE_EQ(n,      5, "Le calcul de taille du tableau statique doit donner 5");
+    REQUIRE_EQ(tab[0], 10, "L'indice 0 doit contenir le premier element");    /* premier element : indice 0 */
+    REQUIRE_EQ(tab[4], 50, "L'indice N-1 doit contenir le dernier element");    /* dernier element : indice N-1 */
 }
 
 /* ===================================================================
@@ -268,7 +268,7 @@ TEST(tableaux, parametre) {
     int t[] = {1, 2, 3, 4, 5};
     int n   = (int)(sizeof(t) / sizeof(t[0]));   /* calcul possible ICI seulement */
 
-    REQUIRE_EQ(somme_tableau(t, n), 15);
+    REQUIRE_EQ(somme_tableau(t, n), 15, "La somme des elements du tableau doit etre 15");
 }
 
 /* ===================================================================
@@ -289,13 +289,13 @@ static int longueur(Maillon *p) {
 
 TEST(listes, null_sentinelle) {
     Maillon *vide = NULL;
-    REQUIRE_EQ(longueur(vide), 0);    /* liste vide => longueur 0 */
+    REQUIRE_EQ(longueur(vide), 0, "Une liste vide doit avoir une longueur de 0");    /* liste vide => longueur 0 */
 
     Maillon un = {42, NULL};
-    REQUIRE_EQ(longueur(&un), 1);
+    REQUIRE_EQ(longueur(&un), 1, "Une liste a un maillon doit avoir une longueur de 1");
 
     Maillon deux = {7, &un};
-    REQUIRE_EQ(longueur(&deux), 2);
+    REQUIRE_EQ(longueur(&deux), 2, "Une liste a deux maillons doit avoir une longueur de 2");
 }
 
 /* ===================================================================
@@ -323,16 +323,16 @@ TEST(listes, suppression_tete) {
     liste = inserer_tete(liste, 1);  /* 1 -> 2 -> 3 -> NULL */
 
     liste = supprimer_tete(liste);
-    REQUIRE_EQ(liste->val, 2);
+    REQUIRE_EQ(liste->val, 2, "Apres suppression de tete, la nouvelle tete doit valoir 2");
 
     liste = supprimer_tete(liste);
-    REQUIRE_EQ(liste->val, 3);
+    REQUIRE_EQ(liste->val, 3, "Apres une deuxieme suppression, la tete doit valoir 3");
 
     liste = supprimer_tete(liste);
-    REQUIRE_NULL(liste);
+    REQUIRE_NULL(liste, "Supprimer la derniere tete doit rendre la liste vide");
 
     liste = supprimer_tete(liste);   /* liste deja vide -> ne plante pas */
-    REQUIRE_NULL(liste);
+    REQUIRE_NULL(liste, "Supprimer la tete d'une liste vide doit laisser NULL");
 }
 
 /* =================================================================== */
