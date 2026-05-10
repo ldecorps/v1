@@ -50,27 +50,45 @@ int *ReleveAleatoire(int n) {
 /* --- Q4 (p.2) ---------------------------------------------------- */
 
 int AnalyserReleve(int *releve, int n, int *pNbDistinct, int *pCodeMax) {
-    int freq[8] = {0};
-    int index = 1;
-    for(index; index <= 8; index ++){
+    int freq[8] = {0};//{0; 0; 0 ; 0 ; 0 ; 0; 0; 0}
+    int code;
+    for(code = 1; code <= 8; code ++){
         for(int i = 0; i < n; i++){
-            if (releve[i] == index) freq[index - 1]++;
+            if (releve[i] == code) freq[code - 1]++;
         }
         
-    } //donc notre tableau de frequences est remplie
+    } 
+    //useful
+    printf("{");
+    for (int j = 0; j < 8; j++){
+        printf("%d  ;", freq[j]);
+    }
+    puts("}");
+    
+    //donc notre tableau de frequences est remplie
     //continuons pour trouver NbDist
     *pNbDistinct = 0;
-    *pCodeMax = 0;
-    //on remarque que pCodeMax doit avoir le code plus petit en cas d'egalité,
-    //donc nous devons utiliser un for inversé
-    for (int j = 7; j>= 0; j--){
-        if(freq[j] >= freq[*pCodeMax - 1]) *pCodeMax = j + 1;
-        if (freq[j] != 0) *pNbDistinct ++;
-    }
-    return n;
-    
-    
+    *pCodeMax = 1;
 
+    for (int a = 0; a < 8; a++){
+        if (freq[a] != 0 )(*pNbDistinct)++;
+    }
+    if (n == 1) *pNbDistinct = 1;
+
+    //more shit for nbdistinct
+    //lets loop through freq to find the max of freq
+    int kmax = 0;
+    for (int k = 1; k < 8; k++){
+        printf("%d est la frequence de %d \n", freq[k], k+1);
+            if((freq[k] > freq[kmax])) kmax = k; 
+            if (freq[k] == n) *pNbDistinct = 1; 
+        }
+    
+    *pCodeMax = kmax + 1;
+
+    //wow the struggle for typos!
+    
+    return n;
 }
 
 

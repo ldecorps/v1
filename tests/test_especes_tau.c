@@ -102,7 +102,7 @@ TEST(q4_tableaux, analyser_releve_un_element) {
     REQUIRE_EQ(codeMax,    5, "l'espece la plus observee doit etre la seule espece presente (code 5)");
 }
 
-IGNORE_TEST(q4_tableaux, analyser_releve_toutes_memes) {
+TEST(q4_tableaux, analyser_releve_toutes_memes) {
     /* Toutes les observations sont la meme espece */
     int releve[] = {3, 3, 3, 3};
     int nbDistinct = 0, codeMax = 0;
@@ -112,7 +112,7 @@ IGNORE_TEST(q4_tableaux, analyser_releve_toutes_memes) {
     REQUIRE_EQ(codeMax,    3, "la seule espece presente (code 3) est necessairement la plus observee");
 }
 
-IGNORE_TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
+TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     int nbDistinct = 0, codeMax = 0;
     int total = AnalyserReleve(releve, 10, &nbDistinct, &codeMax);
