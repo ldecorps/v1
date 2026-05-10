@@ -27,7 +27,7 @@ TEST(q1_tableaux, est_valide_code_zero) {
     REQUIRE_EQ(EstValide(0), 0);           /* en dessous de la borne inferieure */
 }
 
-IGNORE_TEST(q1_tableaux, est_valide_borne_inf) {
+TEST(q1_tableaux, est_valide_borne_inf) {
     REQUIRE_EQ(EstValide(1), 1);           /* borne inferieure valide */
 }
 

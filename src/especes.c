@@ -20,7 +20,7 @@ int EstValide(int code) {
 
 int CompterOccurrences(int *releve, int n, int code) {
     /* TODO: retourner le nombre de fois que code apparait dans releve[0..n-1] */
-    (void)releve; (void)n; (void)code;
+    releve; n; code;
     return 0;
 }
 
@@ -29,7 +29,7 @@ int CompterOccurrences(int *releve, int n, int code) {
 void AfficherReleve(int *releve, int n) {
     /* TODO: afficher les n codes sur une seule ligne, separes par
      *       des espaces, avec un '\n' final */
-    (void)releve; (void)n;
+    releve; n;
 }
 
 /* --- Q3 (p.1-2) -------------------------------------------------- */
