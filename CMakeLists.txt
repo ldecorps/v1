@@ -73,14 +73,18 @@ if(BUILD_TESTS)
 
   add_test(NAME ${TEST_EXE} COMMAND ${TEST_EXE})
 
-  # Cours UL1IN002 — tests pédagogiques autonomes (tout inline, pas de lib externe)
+  # Cours UL1IN002 — rappels de cours avec tau (header-only, cross-platform)
+  # tau est vendored dans third_party/tau/tau.h — aucune installation requise.
   set(COURS_TEST_EXE cours_test)
-  add_executable(${COURS_TEST_EXE} tests/test_cours_UL1IN002.c)
+  add_executable(${COURS_TEST_EXE} tests/test_cours_tau.c)
   target_include_directories(${COURS_TEST_EXE} PRIVATE
-    ${CMOCKA_INCLUDE_DIR}
-    ${CMOCKA_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/third_party
   )
-  target_link_libraries(${COURS_TEST_EXE} PRIVATE ${CMOCKA_LINK_TARGET})
+  # tau est header-only : aucune lib a lier.
+  # Sur certains compilateurs, les maths flottantes de tau necessitent -lm.
+  if(UNIX)
+    target_link_libraries(${COURS_TEST_EXE} PRIVATE m)
+  endif()
   add_test(NAME ${COURS_TEST_EXE} COMMAND ${COURS_TEST_EXE})
 endif()
 

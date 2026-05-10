@@ -4,16 +4,16 @@
  * Rappels de cours — Concepts du langage C necessaires pour LU1IN002
  * Sorbonne Universite — Elements de programmation 2
  *
- * Chaque test illustre UN concept fondamental du langage C,
- * avec un moyen mnemotechnique pour le retenir.
+ * Framework : tau (header-only, cross-platform Windows/Linux/macOS)
+ *   https://github.com/jasmcaus/tau
  *
- * Criterion decouvre les tests automatiquement — aucun main() necessaire.
- * Syntaxe : Test(suite, nom_du_test) { ... cr_assert_eq(a, b); ... }
+ * Chaque TEST(suite, nom) illustre UN concept fondamental du langage C.
+ * Les tests sont decouverts automatiquement — aucune liste a maintenir.
+ * TAU_MAIN() en bas genere le point d'entree.
  */
 
-#include <criterion/criterion.h>
+#include "tau/tau.h"
 #include <stdlib.h>
-#include <string.h>
 
 /* ===================================================================
  * CONCEPT 1 : Pointeurs — adresse et dereferencement
@@ -24,14 +24,14 @@
  *   int *p = &x;   // p contient l'adresse de x
  *   *p = 99;       // ecrit 99 a l'adresse pointee => x vaut 99
  * =================================================================== */
-Test(pointeurs, adresse_et_deref) {
+TEST(pointeurs, adresse_et_deref) {
     int x = 42;
     int *p = &x;              /* p = adresse de x */
 
-    cr_assert_eq(*p, 42);    /* *p lit la valeur a l'adresse p */
+    REQUIRE_EQ(*p, 42);      /* *p lit la valeur a l'adresse p */
 
     *p = 99;                  /* *p modifie la valeur a l'adresse p */
-    cr_assert_eq(x, 99);     /* x a ete change via le pointeur */
+    REQUIRE_EQ(x, 99);       /* x a ete change via le pointeur */
 }
 
 /* ===================================================================
@@ -48,10 +48,10 @@ static void doubler(int *val) {
     *val = *val * 2;  /* ecrit dans la variable de l'appelant */
 }
 
-Test(pointeurs, parametre_sortie) {
+TEST(pointeurs, parametre_sortie) {
     int n = 5;
     doubler(&n);         /* on passe l'adresse, la fonction modifie n */
-    cr_assert_eq(n, 10);
+    REQUIRE_EQ(n, 10);
 }
 
 /* ===================================================================
@@ -65,33 +65,30 @@ typedef struct {
     int nbObs;
 } Espece;
 
-Test(structures, acces_point) {
-    Espece e;            /* variable de type Espece (sur la pile) */
+TEST(structures, acces_point) {
+    Espece e;
     e.code  = 3;
     e.nbObs = 7;
 
-    cr_assert_eq(e.code,  3);
-    cr_assert_eq(e.nbObs, 7);
+    REQUIRE_EQ(e.code,  3);
+    REQUIRE_EQ(e.nbObs, 7);
 }
 
 /* ===================================================================
  * CONCEPT 4 : Pointeur de structure — l'operateur fleche ->
  * ----------------------------------------------------------
  * Mnemo : "p->champ  identique a  (*p).champ"
- *         "fleche = dereferencer ET acceder au champ en une etape"
- *
- * On utilise -> quand on a un POINTEUR sur une structure.
- * On utilise .  quand on a la structure DIRECTEMENT.
+ *         "-> quand POINTEUR,  . quand valeur directe"
  * =================================================================== */
-Test(structures, acces_fleche) {
+TEST(structures, acces_fleche) {
     Espece  e = {5, 2};
-    Espece *p = &e;           /* pointeur sur la structure */
+    Espece *p = &e;
 
-    cr_assert_eq(p->code,  5);    /* p->code  ==  (*p).code  */
-    cr_assert_eq(p->nbObs, 2);
+    REQUIRE_EQ(p->code,  5);    /* p->code  ==  (*p).code */
+    REQUIRE_EQ(p->nbObs, 2);
 
-    p->nbObs = 10;            /* modifier via le pointeur */
-    cr_assert_eq(e.nbObs, 10);    /* la structure originale est modifiee */
+    p->nbObs = 10;              /* modifier via le pointeur */
+    REQUIRE_EQ(e.nbObs, 10);   /* la structure originale est modifiee */
 }
 
 /* ===================================================================
@@ -100,23 +97,21 @@ Test(structures, acces_fleche) {
  * Mnemo : "ALLOUER -> VERIFIER NULL -> UTILISER -> LIBERER"
  *
  *   T *p = malloc(sizeof(T));
- *   if (!p) { ... erreur ... }   // toujours verifier !
- *   p->champ = ...;
+ *   if (!p) { ... }   // toujours verifier !
  *   free(p);
  *
- * malloc retourne NULL si la memoire est epuisee.
  * Apres free, p est invalide ("dangling pointer") -> ne plus l'utiliser.
  * =================================================================== */
-Test(memoire, malloc_free) {
+TEST(memoire, malloc_free) {
     Espece *p = malloc(sizeof(Espece));
-    cr_assert_not_null(p);   /* toujours verifier ! */
+    REQUIRE_NOT_NULL(p);    /* toujours verifier ! */
 
     p->code  = 7;
     p->nbObs = 3;
-    cr_assert_eq(p->code, 7);
+    REQUIRE_EQ(p->code, 7);
 
     free(p);
-    /* Bonne pratique : p = NULL;  apres free, pour eviter les bugs */
+    /* Bonne pratique : p = NULL; apres free */
 }
 
 /* ===================================================================
@@ -136,14 +131,14 @@ typedef struct Maillon {
     struct Maillon *suiv;
 } Maillon;
 
-Test(listes, typedef_maillon) {
+TEST(listes, typedef_maillon) {
     /* construction a la main sur la pile : 10 -> 20 -> NULL */
     Maillon m1 = {10, NULL};
     Maillon m2 = {20, &m1};
 
-    cr_assert_eq(m2.val,       20);
-    cr_assert_eq(m2.suiv->val, 10);    /* acces au suivant via -> */
-    cr_assert_null(m2.suiv->suiv);     /* fin de liste = NULL */
+    REQUIRE_EQ(m2.val,       20);
+    REQUIRE_EQ(m2.suiv->val, 10);   /* acces au suivant via -> */
+    REQUIRE_NULL(m2.suiv->suiv);    /* fin de liste = NULL */
 }
 
 /* ===================================================================
@@ -151,23 +146,22 @@ Test(listes, typedef_maillon) {
  * --------------------------------------
  * Mnemo : "while(p != NULL) { traiter(p) ; p = p->suiv ; }"
  *
- * p est un CURSEUR qui avance de maillon en maillon.
- * Ne pas modifier p si on en a besoin ensuite -> utiliser un curseur local.
+ * p est un CURSEUR local. Ne jamais avancer la variable tete elle-meme.
  * =================================================================== */
-Test(listes, parcours) {
+TEST(listes, parcours) {
     /* 1 -> 2 -> 3 -> NULL (sur la pile) */
     Maillon m3 = {3, NULL};
     Maillon m2 = {2, &m3};
     Maillon m1 = {1, &m2};
 
     int somme = 0;
-    Maillon *p = &m1;         /* p est le curseur de parcours */
+    Maillon *p = &m1;
     while (p != NULL) {
         somme += p->val;
-        p = p->suiv;          /* avancer au maillon suivant */
+        p = p->suiv;
     }
 
-    cr_assert_eq(somme, 6);    /* 1 + 2 + 3 */
+    REQUIRE_EQ(somme, 6);    /* 1 + 2 + 3 */
 }
 
 /* ===================================================================
@@ -177,38 +171,38 @@ Test(listes, parcours) {
  *
  *   Maillon *nv = malloc(sizeof(Maillon));
  *   nv->val  = v;
- *   nv->suiv = liste;    // nv pointe vers l'ancienne tete
- *   return nv;           // la nouvelle tete est retournee
+ *   nv->suiv = liste;   // nv pointe vers l'ancienne tete
+ *   return nv;          // la nouvelle tete est retournee
  *
  * L'appelant DOIT recuperer le retour : liste = inserer_tete(liste, v);
  * =================================================================== */
 static Maillon *inserer_tete(Maillon *liste, int val) {
     Maillon *nv = malloc(sizeof(Maillon));
-    if (!nv) return liste;    /* malloc peut echouer */
+    if (!nv) return liste;
     nv->val  = val;
-    nv->suiv = liste;         /* nv devient la nouvelle tete */
+    nv->suiv = liste;
     return nv;
 }
 
 static Maillon *liberer_liste(Maillon *p) {
     while (p != NULL) {
-        Maillon *tmp = p->suiv;    /* SAUVER suiv avant free */
+        Maillon *tmp = p->suiv;
         free(p);
         p = tmp;
     }
     return NULL;
 }
 
-Test(listes, insertion_tete) {
+TEST(listes, insertion_tete) {
     Maillon *liste = NULL;
-    liste = inserer_tete(liste, 3);    /* 3 -> NULL         */
+    liste = inserer_tete(liste, 3);    /* 3 -> NULL          */
     liste = inserer_tete(liste, 2);    /* 2 -> 3 -> NULL     */
     liste = inserer_tete(liste, 1);    /* 1 -> 2 -> 3 -> NULL */
 
-    cr_assert_eq(liste->val,             1);
-    cr_assert_eq(liste->suiv->val,       2);
-    cr_assert_eq(liste->suiv->suiv->val, 3);
-    cr_assert_null(liste->suiv->suiv->suiv);
+    REQUIRE_EQ(liste->val,             1);
+    REQUIRE_EQ(liste->suiv->val,       2);
+    REQUIRE_EQ(liste->suiv->suiv->val, 3);
+    REQUIRE_NULL(liste->suiv->suiv->suiv);
 
     liberer_liste(liste);
 }
@@ -218,15 +212,14 @@ Test(listes, insertion_tete) {
  * -------------------------------------------------------
  * Mnemo : "SAUVER suiv AVANT de free le maillon courant"
  *
- *   Maillon *tmp = p->suiv;   // 1. SAUVER le lien
- *   free(p);                  // 2. LIBERER le maillon
+ *   Maillon *tmp = p->suiv;   // 1. SAUVER
+ *   free(p);                  // 2. LIBERER
  *   p = tmp;                  // 3. AVANCER
  *
  * ERREUR classique : free(p); p = p->suiv;
- *   -> on accede a p->suiv apres avoir libere p ! (comportement indefini)
+ *   -> acces a p->suiv apres liberation ! (comportement indefini)
  * =================================================================== */
-Test(memoire, liberation_liste) {
-    /* creer dynamiquement : 10 -> 20 -> NULL */
+TEST(memoire, liberation_liste) {
     Maillon *a = malloc(sizeof(Maillon)); a->val = 10; a->suiv = NULL;
     Maillon *b = malloc(sizeof(Maillon)); b->val = 20; b->suiv = a;
 
@@ -237,7 +230,7 @@ Test(memoire, liberation_liste) {
         p = tmp;                   /* 3. AVANCER */
     }
 
-    cr_assert(1);    /* arriver ici sans crash valide la liberation */
+    REQUIRE_EQ(1, 1);   /* arriver ici sans crash valide la liberation */
 }
 
 /* ===================================================================
@@ -245,29 +238,25 @@ Test(memoire, liberation_liste) {
  * --------------------------------------------------------
  * Mnemo : "indices de 0 a N-1 ; sizeof(tab)/sizeof(tab[0]) = N"
  *
- *   int tab[5] = {10, 20, 30, 40, 50};
- *   tab[0]  =>  10    (premier element)
- *   tab[4]  =>  50    (dernier element, indice N-1)
- *   tab[5]  =>  HORS BORNES — comportement indefini, pas d'erreur de compil !
+ *   tab[0]  =>  premier element
+ *   tab[N-1]=>  dernier element
+ *   tab[N]  =>  HORS BORNES (pas d'erreur de compil !)
  * =================================================================== */
-Test(tableaux, statique) {
+TEST(tableaux, statique) {
     int tab[5] = {10, 20, 30, 40, 50};
-    int n = (int)(sizeof(tab) / sizeof(tab[0]));    /* = 5 */
+    int n = (int)(sizeof(tab) / sizeof(tab[0]));
 
-    cr_assert_eq(n,      5);
-    cr_assert_eq(tab[0], 10);    /* premier element : indice 0 */
-    cr_assert_eq(tab[4], 50);    /* dernier element : indice N-1 */
+    REQUIRE_EQ(n,      5);
+    REQUIRE_EQ(tab[0], 10);    /* premier element : indice 0 */
+    REQUIRE_EQ(tab[4], 50);    /* dernier element : indice N-1 */
 }
 
 /* ===================================================================
  * CONCEPT 11 : Tableau passe a une fonction — decroissance en pointeur
  * ---------------------------------------------------------------------
- * Mnemo : "tableau passe = POINTEUR sur le premier element"
- *         "la taille N doit etre passee separement !"
- *
- *   void f(int *tab, int n)    // ou f(int tab[], int n) — identique
- *   // Dans f : sizeof(tab) == sizeof(int *), PAS sizeof du tableau !
- *   //          => toujours passer n explicitement
+ * Mnemo : "tableau passe = POINTEUR sur tab[0]"
+ *         "sizeof(tab) dans la fonction = sizeof(int*), pas N*sizeof(int)"
+ *         "=> toujours passer n separement"
  * =================================================================== */
 static int somme_tableau(int *tab, int n) {
     int s = 0;
@@ -275,21 +264,20 @@ static int somme_tableau(int *tab, int n) {
     return s;
 }
 
-Test(tableaux, parametre) {
+TEST(tableaux, parametre) {
     int t[] = {1, 2, 3, 4, 5};
-    int n   = (int)(sizeof(t) / sizeof(t[0]));    /* calcul possible ICI seulement */
+    int n   = (int)(sizeof(t) / sizeof(t[0]));   /* calcul possible ICI seulement */
 
-    cr_assert_eq(somme_tableau(t, n), 15);
+    REQUIRE_EQ(somme_tableau(t, n), 15);
 }
 
 /* ===================================================================
- * CONCEPT 12 : NULL comme sentinelle — liste vide et fin de liste
- * ----------------------------------------------------------------
+ * CONCEPT 12 : NULL comme sentinelle
+ * ------------------------------------
  * Mnemo : "NULL = rien ; p == NULL => liste vide ou fin atteinte"
  *
  *   Maillon *liste = NULL;               // liste vide
- *   if (liste == NULL) { ... }           // test liste vide
- *   while (p != NULL) { p = p->suiv; }  // parcours jusqu'a la fin
+ *   while (p != NULL) { p = p->suiv; }  // parcours complet
  *
  * Toujours initialiser un pointeur a NULL s'il ne pointe sur rien.
  * =================================================================== */
@@ -299,52 +287,53 @@ static int longueur(Maillon *p) {
     return n;
 }
 
-Test(listes, null_sentinelle) {
+TEST(listes, null_sentinelle) {
     Maillon *vide = NULL;
-    cr_assert_eq(longueur(vide), 0);     /* liste vide => longueur 0 */
+    REQUIRE_EQ(longueur(vide), 0);    /* liste vide => longueur 0 */
 
     Maillon un = {42, NULL};
-    cr_assert_eq(longueur(&un), 1);      /* liste a un element */
+    REQUIRE_EQ(longueur(&un), 1);
 
     Maillon deux = {7, &un};
-    cr_assert_eq(longueur(&deux), 2);    /* liste a deux elements */
+    REQUIRE_EQ(longueur(&deux), 2);
 }
 
 /* ===================================================================
  * CONCEPT 13 : Suppression d'un maillon en tete
  * -----------------------------------------------
- * Mnemo : "SAUVER le suivant -> FREE la tete -> retourner le suivant"
+ * Mnemo : "SAUVER suiv -> FREE tete -> retourner suiv"
  *
- *   Maillon *tmp = liste->suiv;   // sauver
- *   free(liste);                  // liberer
- *   return tmp;                   // nouvelle tete
+ *   Maillon *tmp = liste->suiv;
+ *   free(liste);
+ *   return tmp;
  *
- * L'appelant DOIT recuperer le retour :
- *   liste = supprimer_tete(liste);
+ * L'appelant recupere le retour : liste = supprimer_tete(liste);
  * =================================================================== */
 static Maillon *supprimer_tete(Maillon *liste) {
-    if (liste == NULL) return NULL;   /* cas liste vide : rien a faire */
+    if (liste == NULL) return NULL;
     Maillon *tmp = liste->suiv;
     free(liste);
     return tmp;
 }
 
-Test(listes, suppression_tete) {
-    /* creer 1 -> 2 -> 3 -> NULL */
+TEST(listes, suppression_tete) {
     Maillon *liste = NULL;
     liste = inserer_tete(liste, 3);
     liste = inserer_tete(liste, 2);
-    liste = inserer_tete(liste, 1);
+    liste = inserer_tete(liste, 1);  /* 1 -> 2 -> 3 -> NULL */
 
-    liste = supprimer_tete(liste);    /* supprime 1 -> reste 2 -> 3 */
-    cr_assert_eq(liste->val, 2);
+    liste = supprimer_tete(liste);
+    REQUIRE_EQ(liste->val, 2);
 
-    liste = supprimer_tete(liste);    /* supprime 2 -> reste 3 */
-    cr_assert_eq(liste->val, 3);
+    liste = supprimer_tete(liste);
+    REQUIRE_EQ(liste->val, 3);
 
-    liste = supprimer_tete(liste);    /* supprime 3 -> liste vide */
-    cr_assert_null(liste);
+    liste = supprimer_tete(liste);
+    REQUIRE_NULL(liste);
 
-    liste = supprimer_tete(liste);    /* liste deja vide -> ne plante pas */
-    cr_assert_null(liste);
+    liste = supprimer_tete(liste);   /* liste deja vide -> ne plante pas */
+    REQUIRE_NULL(liste);
 }
+
+/* =================================================================== */
+TAU_MAIN()   /* point d'entree — les tests sont decouverts automatiquement */
