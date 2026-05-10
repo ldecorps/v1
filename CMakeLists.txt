@@ -8,7 +8,7 @@ if(APPLE)
   endif()
 endif()
 
-project(hello_c_project VERSION 1.0 LANGUAGES C)
+project(lu1in002_especes VERSION 1.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -24,17 +24,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-add_library(hello STATIC src/hello.c)
-target_include_directories(hello PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
 # Examen 2026 LU1IN002 — module especes (tableaux + listes chainees)
 # REF: Examen_2026_UL1IN002_Prediction.pdf
 add_library(especes STATIC src/especes.c)
 target_include_directories(especes PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-add_executable(hello_world src/main.c)
-target_link_libraries(hello_world PRIVATE hello)
-target_include_directories(hello_world PRIVATE ${PROJECT_SOURCE_DIR}/include)
+# Bac a sable : main de l'examen (Q12)
+add_executable(especes_main src/main.c)
+target_link_libraries(especes_main PRIVATE especes)
+target_include_directories(especes_main PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 option(BUILD_TESTS "Build unit tests" ON)
 
@@ -71,12 +69,12 @@ if(BUILD_TESTS)
 endif()
 
 # Installation rules
-install(TARGETS hello hello_world
+install(TARGETS especes especes_main
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
 
-install(FILES ${PROJECT_SOURCE_DIR}/include/hello.h
+install(FILES ${PROJECT_SOURCE_DIR}/include/especes.h
   DESTINATION include
 )
