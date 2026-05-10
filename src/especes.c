@@ -42,7 +42,6 @@ int *ReleveAleatoire(int n) {
     int *tab = malloc(sizeof(int) * n );
     for (int i = 0; i < n; i++){
         int esp = rand() % NB_ESPECES + 1;
-        printf("%d ", esp);
         *(tab + i) = esp;
         }
     return tab;
@@ -51,14 +50,29 @@ int *ReleveAleatoire(int n) {
 /* --- Q4 (p.2) ---------------------------------------------------- */
 
 int AnalyserReleve(int *releve, int n, int *pNbDistinct, int *pCodeMax) {
-    /* TODO: calculer *pNbDistinct (especes distinctes) et *pCodeMax
-     *       (code le plus frequent, plus petit code en cas d'egalite),
-     *       retourner n (nombre total d'observations) */
-    (void)releve; (void)n;
+    int freq[8] = {0};
+    int index = 1;
+    for(index; index <= 8; index ++){
+        for(int i = 0; i < n; i++){
+            if (releve[i] == index) freq[index - 1]++;
+        }
+        
+    } //donc notre tableau de frequences est remplie
+    //continuons pour trouver NbDist
     *pNbDistinct = 0;
-    *pCodeMax    = 0;
-    return 0;
+    *pCodeMax = 0;
+    //on remarque que pCodeMax doit avoir le code plus petit en cas d'egalité,
+    //donc nous devons utiliser un for inversé
+    for (int j = 7; j>= 0; j--){
+        if(freq[j] >= freq[*pCodeMax - 1]) *pCodeMax = j + 1;
+        if (freq[j] != 0) *pNbDistinct ++;
+    }
+    return n;
+    
+    
+
 }
+
 
 /* --- Q5 (p.2) ---------------------------------------------------- */
 

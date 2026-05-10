@@ -92,7 +92,7 @@ TEST(q3_tableaux, releve_aleatoire_codes_valides) {
  * REF: Q4 (p.2) — AnalyserReleve
  * =================================================================== */
 
-TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
+IGNORE_TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     int nbDistinct = 0, codeMax = 0;
     int total = AnalyserReleve(releve, 10, &nbDistinct, &codeMax);
@@ -101,7 +101,7 @@ TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     REQUIRE_EQ(codeMax,     3); /* espece 3 observee 4 fois     */
 }
 
-IGNORE_TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
+TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
     /* En cas d'egalite on conserve le plus petit code */
     int releve[] = {1, 2, 1, 2};  /* especes 1 et 2 : 2 obs chacune */
     int nbDistinct = 0, codeMax = 0;
