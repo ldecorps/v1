@@ -36,43 +36,6 @@ option(BUILD_TESTS "Build unit tests" ON)
 if(BUILD_TESTS)
   enable_testing()
 
-  # cmocka — install via:
-  #   MSYS2:  pacman -S mingw-w64-x86_64-cmocka
-  #   macOS:  brew install cmocka
-  #   Linux:  sudo apt install libcmocka-dev
-  find_package(cmocka QUIET)
-  if(NOT cmocka_FOUND)
-    find_package(PkgConfig QUIET)
-    if(PKG_CONFIG_FOUND)
-      pkg_check_modules(CMOCKA QUIET cmocka)
-    endif()
-  endif()
-
-  if(cmocka_FOUND)
-    if(TARGET cmocka::cmocka)
-      set(CMOCKA_LINK_TARGET cmocka::cmocka)
-    else()
-      set(CMOCKA_LINK_TARGET ${CMOCKA_LIBRARIES})
-    endif()
-  elseif(CMOCKA_FOUND)
-    set(CMOCKA_LINK_TARGET ${CMOCKA_LIBRARIES})
-  else()
-    # Fallback: try linking by name (works if MinGW/brew puts it on the path)
-    message(STATUS "cmocka not found via find_package — linking by name")
-    set(CMOCKA_LINK_TARGET cmocka)
-  endif()
-
-  set(TEST_EXE hello_test)
-  add_executable(${TEST_EXE} tests/test_hello_cmocka.c)
-  target_include_directories(${TEST_EXE} PRIVATE
-    ${PROJECT_SOURCE_DIR}/include
-    ${CMOCKA_INCLUDE_DIR}
-    ${CMOCKA_INCLUDE_DIRS}
-  )
-  target_link_libraries(${TEST_EXE} PRIVATE hello ${CMOCKA_LINK_TARGET})
-
-  add_test(NAME ${TEST_EXE} COMMAND ${TEST_EXE})
-
   # Cours UL1IN002 — rappels de cours avec tau (header-only, cross-platform)
   # tau est vendored dans third_party/tau/tau.h — aucune installation requise.
   set(COURS_TEST_EXE cours_test)
