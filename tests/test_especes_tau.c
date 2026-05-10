@@ -31,11 +31,11 @@ TEST(q1_tableaux, est_valide_borne_inf) {
     REQUIRE_EQ(EstValide(1), 1);           /* borne inferieure valide */
 }
 
-IGNORE_TEST(q1_tableaux, est_valide_borne_sup) {
+TEST(q1_tableaux, est_valide_borne_sup) {
     REQUIRE_EQ(EstValide(NB_ESPECES), 1);  /* borne superieure valide */
 }
 
-IGNORE_TEST(q1_tableaux, est_valide_au_dessus) {
+TEST(q1_tableaux, est_valide_au_dessus) {
     REQUIRE_EQ(EstValide(NB_ESPECES + 1), 0); /* au-dessus de la borne */
 }
 
@@ -43,7 +43,7 @@ IGNORE_TEST(q1_tableaux, est_valide_au_dessus) {
  * REF: Q1 (p.1) — CompterOccurrences
  * =================================================================== */
 
-IGNORE_TEST(q1_tableaux, compter_occurrences_releve_exemple) {
+TEST(q1_tableaux, compter_occurrences_releve_exemple) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     REQUIRE_EQ(CompterOccurrences(releve, 10, 3), 4); /* espece 3 : 4 fois */
     REQUIRE_EQ(CompterOccurrences(releve, 10, 1), 3); /* espece 1 : 3 fois */
@@ -51,7 +51,7 @@ IGNORE_TEST(q1_tableaux, compter_occurrences_releve_exemple) {
     REQUIRE_EQ(CompterOccurrences(releve, 10, 7), 1); /* espece 7 : 1 fois */
 }
 
-IGNORE_TEST(q1_tableaux, compter_occurrences_absent) {
+TEST(q1_tableaux, compter_occurrences_absent) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     REQUIRE_EQ(CompterOccurrences(releve, 10, 2), 0); /* espece 2 absente */
 }
@@ -62,7 +62,7 @@ IGNORE_TEST(q1_tableaux, compter_occurrences_absent) {
  * (La sortie printf ne peut pas etre comparee ici sans redirection.)
  * =================================================================== */
 
-IGNORE_TEST(q2_tableaux, afficher_releve_no_crash) {
+TEST(q2_tableaux, afficher_releve_no_crash) {
     int releve[] = {1, 3, 5};
     AfficherReleve(releve, 3); /* doit s'executer sans crash */
     REQUIRE_EQ(1, 1);
@@ -72,13 +72,13 @@ IGNORE_TEST(q2_tableaux, afficher_releve_no_crash) {
  * REF: Q3 (p.1-2) — ReleveAleatoire
  * =================================================================== */
 
-IGNORE_TEST(q3_tableaux, releve_aleatoire_non_null) {
+TEST(q3_tableaux, releve_aleatoire_non_null) {
     int *r = ReleveAleatoire(10);
     REQUIRE_NOT_NULL(r);
     free(r);
 }
 
-IGNORE_TEST(q3_tableaux, releve_aleatoire_codes_valides) {
+TEST(q3_tableaux, releve_aleatoire_codes_valides) {
     int *r = ReleveAleatoire(200);
     REQUIRE_NOT_NULL(r);
     for (int i = 0; i < 200; i++) {
@@ -92,7 +92,7 @@ IGNORE_TEST(q3_tableaux, releve_aleatoire_codes_valides) {
  * REF: Q4 (p.2) — AnalyserReleve
  * =================================================================== */
 
-IGNORE_TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
+TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     int nbDistinct = 0, codeMax = 0;
     int total = AnalyserReleve(releve, 10, &nbDistinct, &codeMax);

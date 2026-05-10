@@ -12,34 +12,40 @@
 
 /* --- Q1 (p.1) ---------------------------------------------------- */
 
-int EstValide(int code) {
-    /* TODO: retourner 1 si 1 <= code <= NB_ESPECES, 0 sinon */
-    (void)code;
+int EstValide(int code){
+    if((code >= 1) && (code <= NB_ESPECES)) return 1;
     return 0;
 }
 
 int CompterOccurrences(int *releve, int n, int code) {
-    /* TODO: retourner le nombre de fois que code apparait dans releve[0..n-1] */
-    releve; n; code;
-    return 0;
+    int c = 0;
+    for(int i = 0; i < n; i++){
+        if( *(releve + i) == code){
+            c ++ ;
+        }
+    }
+    return c;
 }
 
 /* --- Q2 (p.1) ---------------------------------------------------- */
 
 void AfficherReleve(int *releve, int n) {
-    /* TODO: afficher les n codes sur une seule ligne, separes par
-     *       des espaces, avec un '\n' final */
-    releve; n;
+    for (int i = 0; i < n; i++){
+        printf("%d ", *(releve + i));
+    }
+    printf("\n");
 }
 
 /* --- Q3 (p.1-2) -------------------------------------------------- */
 
 int *ReleveAleatoire(int n) {
-    /* TODO: allouer un tableau de n entiers, le remplir avec des codes
-     *       valides tires aleatoirement (rand() % NB_ESPECES + 1),
-     *       retourner l'adresse du tableau */
-    (void)n;
-    return NULL;
+    int *tab = malloc(sizeof(int) * n );
+    for (int i = 0; i < n; i++){
+        int esp = rand() % NB_ESPECES + 1;
+        printf("%d ", esp);
+        *(tab + i) = esp;
+        }
+    return tab;
 }
 
 /* --- Q4 (p.2) ---------------------------------------------------- */
