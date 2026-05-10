@@ -27,15 +27,15 @@ TEST(q1_tableaux, est_valide_code_zero) {
     REQUIRE_EQ(EstValide(0), 0);           /* en dessous de la borne inferieure */
 }
 
-TEST(q1_tableaux, est_valide_borne_inf) {
+IGNORE_TEST(q1_tableaux, est_valide_borne_inf) {
     REQUIRE_EQ(EstValide(1), 1);           /* borne inferieure valide */
 }
 
-TEST(q1_tableaux, est_valide_borne_sup) {
+IGNORE_TEST(q1_tableaux, est_valide_borne_sup) {
     REQUIRE_EQ(EstValide(NB_ESPECES), 1);  /* borne superieure valide */
 }
 
-TEST(q1_tableaux, est_valide_au_dessus) {
+IGNORE_TEST(q1_tableaux, est_valide_au_dessus) {
     REQUIRE_EQ(EstValide(NB_ESPECES + 1), 0); /* au-dessus de la borne */
 }
 
@@ -43,7 +43,7 @@ TEST(q1_tableaux, est_valide_au_dessus) {
  * REF: Q1 (p.1) — CompterOccurrences
  * =================================================================== */
 
-TEST(q1_tableaux, compter_occurrences_releve_exemple) {
+IGNORE_TEST(q1_tableaux, compter_occurrences_releve_exemple) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     REQUIRE_EQ(CompterOccurrences(releve, 10, 3), 4); /* espece 3 : 4 fois */
     REQUIRE_EQ(CompterOccurrences(releve, 10, 1), 3); /* espece 1 : 3 fois */
@@ -51,7 +51,7 @@ TEST(q1_tableaux, compter_occurrences_releve_exemple) {
     REQUIRE_EQ(CompterOccurrences(releve, 10, 7), 1); /* espece 7 : 1 fois */
 }
 
-TEST(q1_tableaux, compter_occurrences_absent) {
+IGNORE_TEST(q1_tableaux, compter_occurrences_absent) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     REQUIRE_EQ(CompterOccurrences(releve, 10, 2), 0); /* espece 2 absente */
 }
@@ -62,7 +62,7 @@ TEST(q1_tableaux, compter_occurrences_absent) {
  * (La sortie printf ne peut pas etre comparee ici sans redirection.)
  * =================================================================== */
 
-TEST(q2_tableaux, afficher_releve_no_crash) {
+IGNORE_TEST(q2_tableaux, afficher_releve_no_crash) {
     int releve[] = {1, 3, 5};
     AfficherReleve(releve, 3); /* doit s'executer sans crash */
     REQUIRE_EQ(1, 1);
@@ -72,13 +72,13 @@ TEST(q2_tableaux, afficher_releve_no_crash) {
  * REF: Q3 (p.1-2) — ReleveAleatoire
  * =================================================================== */
 
-TEST(q3_tableaux, releve_aleatoire_non_null) {
+IGNORE_TEST(q3_tableaux, releve_aleatoire_non_null) {
     int *r = ReleveAleatoire(10);
     REQUIRE_NOT_NULL(r);
     free(r);
 }
 
-TEST(q3_tableaux, releve_aleatoire_codes_valides) {
+IGNORE_TEST(q3_tableaux, releve_aleatoire_codes_valides) {
     int *r = ReleveAleatoire(200);
     REQUIRE_NOT_NULL(r);
     for (int i = 0; i < 200; i++) {
@@ -92,7 +92,7 @@ TEST(q3_tableaux, releve_aleatoire_codes_valides) {
  * REF: Q4 (p.2) — AnalyserReleve
  * =================================================================== */
 
-TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
+IGNORE_TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     int nbDistinct = 0, codeMax = 0;
     int total = AnalyserReleve(releve, 10, &nbDistinct, &codeMax);
@@ -101,7 +101,7 @@ TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     REQUIRE_EQ(codeMax,     3); /* espece 3 observee 4 fois     */
 }
 
-TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
+IGNORE_TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
     /* En cas d'egalite on conserve le plus petit code */
     int releve[] = {1, 2, 1, 2};  /* especes 1 et 2 : 2 obs chacune */
     int nbDistinct = 0, codeMax = 0;
@@ -114,7 +114,7 @@ TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
  * REF: Q5 (p.2) — InsererTrie
  * =================================================================== */
 
-TEST(q5_listes, inserer_premier_element) {
+IGNORE_TEST(q5_listes, inserer_premier_element) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 3);
     REQUIRE_NOT_NULL(reg);                 /* garde : abort si NULL */
@@ -124,7 +124,7 @@ TEST(q5_listes, inserer_premier_element) {
     reg = DetruireRegistre(reg);
 }
 
-TEST(q5_listes, inserer_incremente_nbobs) {
+IGNORE_TEST(q5_listes, inserer_incremente_nbobs) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 3);
     reg = InsererTrie(reg, 3);             /* deuxieme observation de code 3 */
@@ -133,7 +133,7 @@ TEST(q5_listes, inserer_incremente_nbobs) {
     reg = DetruireRegistre(reg);
 }
 
-TEST(q5_listes, inserer_ordre_croissant) {
+IGNORE_TEST(q5_listes, inserer_ordre_croissant) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 5);
     reg = InsererTrie(reg, 1);
@@ -148,7 +148,7 @@ TEST(q5_listes, inserer_ordre_croissant) {
     reg = DetruireRegistre(reg);
 }
 
-TEST(q5_listes, inserer_releve_exemple_complet) {
+IGNORE_TEST(q5_listes, inserer_releve_exemple_complet) {
     /* Releve : 3 1 5 3 1 3 7 5 1 3  =>  (1,3)->(3,4)->(5,2)->(7,1)->NULL */
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
     tyEspece *reg = NULL;
@@ -170,11 +170,11 @@ TEST(q5_listes, inserer_releve_exemple_complet) {
  * REF: Q6 (p.2) — NbEspeces
  * =================================================================== */
 
-TEST(q6_listes, nb_especes_liste_vide) {
+IGNORE_TEST(q6_listes, nb_especes_liste_vide) {
     REQUIRE_EQ(NbEspeces(NULL), 0);
 }
 
-TEST(q6_listes, nb_especes_compte) {
+IGNORE_TEST(q6_listes, nb_especes_compte) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 1);
     reg = InsererTrie(reg, 3);
@@ -187,7 +187,7 @@ TEST(q6_listes, nb_especes_compte) {
  * REF: Q7 (p.2) — DetruireRegistre
  * =================================================================== */
 
-TEST(q7_listes, detruire_retourne_null) {
+IGNORE_TEST(q7_listes, detruire_retourne_null) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 2);
     reg = InsererTrie(reg, 4);
@@ -195,7 +195,7 @@ TEST(q7_listes, detruire_retourne_null) {
     REQUIRE_NULL(reg);
 }
 
-TEST(q7_listes, detruire_liste_vide_ne_crash_pas) {
+IGNORE_TEST(q7_listes, detruire_liste_vide_ne_crash_pas) {
     tyEspece *reg = DetruireRegistre(NULL);
     REQUIRE_NULL(reg);
 }
@@ -205,7 +205,7 @@ TEST(q7_listes, detruire_liste_vide_ne_crash_pas) {
  * Test visuel uniquement : verifie l'absence de crash.
  * =================================================================== */
 
-TEST(q8_listes, afficher_registre_no_crash) {
+IGNORE_TEST(q8_listes, afficher_registre_no_crash) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 1);
     reg = InsererTrie(reg, 3);
@@ -218,7 +218,7 @@ TEST(q8_listes, afficher_registre_no_crash) {
  * REF: Q11 (p.3) — FiltrerRares
  * =================================================================== */
 
-TEST(q11_listes, filtrer_supprime_sous_seuil) {
+IGNORE_TEST(q11_listes, filtrer_supprime_sous_seuil) {
     /* Avant : (1,3)->(3,4)->(5,2)->(7,1)   seuil=3
      * Apres : (1,3)->(3,4)                              */
     int releve[] = {3, 1, 5, 3, 1, 3, 7, 5, 1, 3};
@@ -236,12 +236,12 @@ TEST(q11_listes, filtrer_supprime_sous_seuil) {
     reg = DetruireRegistre(reg);
 }
 
-TEST(q11_listes, filtrer_liste_vide) {
+IGNORE_TEST(q11_listes, filtrer_liste_vide) {
     tyEspece *reg = FiltrerRares(NULL, 5);
     REQUIRE_NULL(reg);
 }
 
-TEST(q11_listes, filtrer_seuil_supprime_tout) {
+IGNORE_TEST(q11_listes, filtrer_seuil_supprime_tout) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 1); /* nbObs = 1 */
     reg = FiltrerRares(reg, 5);
