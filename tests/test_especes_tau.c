@@ -121,7 +121,7 @@ TEST(q4_tableaux, analyser_releve_retour_et_code_max) {
     REQUIRE_EQ(codeMax,     3,  "l'espece 3 est la plus observee (4 fois)");
 }
 
-IGNORE_TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
+TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
     /* En cas d'egalite on conserve le plus petit code */
     int releve[] = {1, 2, 1, 2};  /* especes 1 et 2 : 2 obs chacune */
     int nbDistinct = 0, codeMax = 0;
@@ -134,7 +134,7 @@ IGNORE_TEST(q4_tableaux, analyser_releve_egalite_petit_code) {
  * REF: Q5 (p.2) — InsererTrie
  * =================================================================== */
 
-IGNORE_TEST(q5_listes, inserer_premier_element) {
+TEST(q5_listes, inserer_premier_element) {
     tyEspece *reg = NULL;
     reg = InsererTrie(reg, 3);
     REQUIRE_NOT_NULL(reg);                 /* garde : abort si NULL */

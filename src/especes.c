@@ -71,7 +71,7 @@ int AnalyserReleve(int *releve, int n, int *pNbDistinct, int *pCodeMax) {
     *pCodeMax = 1;
 
     for (int a = 0; a < 8; a++){
-        if (freq[a] != 0 )(*pNbDistinct)++;
+        if (freq[a] != 0 ) (*pNbDistinct)++;
     }
     if (n == 1) *pNbDistinct = 1;
 
@@ -98,8 +98,39 @@ tyEspece *InsererTrie(tyEspece *registre, int code) {
     /* TODO: si code est deja dans la liste, incrementer nbObs.
      *       Sinon allouer un nouveau maillon (nbObs=1) et l'inserer
      *       a la bonne position pour conserver l'ordre croissant.
-     *       Retourner la tete de liste. */
-    (void)code;
+     *       Retourner la tete de liste. 
+     * 
+     * typedef struct _tyEspece tyEspece; 
+     * struct _tyEspece{
+        
+            int code;
+            int nbObs; 
+            tyEspece *suiv;
+        };*/
+    //case where even code is NULL
+    tyEspece *current = registre;
+    tyEspece *tail = NULL;
+    //EMPTY LIST CASEEE
+
+    if (registre == NULL){
+        tyEspece *new = malloc(sizeof(tyEspece));
+        new->code = code;
+        new->nbObs = 1;
+        new->suiv = NULL;
+    }
+
+    //on suppose que ca existe dcp
+    
+    while (current != NULL){
+        if (current->code == code){
+            current->nbObs ++;
+            return registre;
+        }
+        current = current->suiv;
+    }
+
+
+    // premiere insertion
     return registre;
 }
 
